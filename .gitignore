@@ -1,0 +1,83 @@
+# Build directories
+build/
+build-*/
+out/
+cmake-build-*/
+.cmake-build*/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.project
+.cproject
+.settings/
+*.code-workspace
+
+# C++ build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.idb
+*.dSYM/
+*.su
+*.d
+*.gcno
+*.gcda
+*.gcov
+compile_commands.json
+
+# Rust
+target/
+Cargo.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# uv
+.python-version
+
+# Testing
+Testing/
+*.tlog
+*.log
+
+# Documentation output
+docs/_build/
+site/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.local
+*.local
+sandbox/

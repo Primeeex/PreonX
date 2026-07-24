@@ -1,0 +1,15 @@
+[package]
+name = "preonx-cochise"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Asset pipeline components for the PreonX engine (Rust)"
+
+[dependencies]
+# Dependencies will be added as the asset pipeline is implemented.
+
+[lints]
+workspace = true

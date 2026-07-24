@@ -1,0 +1,16 @@
+#pragma once
+
+#define PREONX_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define PREONX_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define PREONX_VERSION_PATCH @PROJECT_VERSION_PATCH@
+#define PREONX_VERSION "@PROJECT_VERSION@"
+#define PREONX_VERSION_STRING "@PROJECT_VERSION@ (@CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@)"
+
+namespace preonx {
+
+constexpr int kVersionMajor = @PROJECT_VERSION_MAJOR@;
+constexpr int kVersionMinor = @PROJECT_VERSION_MINOR@;
+constexpr int kVersionPatch = @PROJECT_VERSION_PATCH@;
+constexpr const char* kVersionString = "@PROJECT_VERSION@";
+
+} // namespace preonx

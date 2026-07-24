@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = [
+    "cochise/rust",
+    "jubal/rust",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT"
+repository = "https://github.com/Primeeex/PreonX"
+homepage = "https://github.com/Primeeex/PreonX"
+description = "A modular, high-performance game engine ecosystem"
+authors = ["Preonic"]
+
+[workspace.dependencies]
+# Dependencies will be added as subsystems are implemented.
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+unused_must_use = "deny"
+unused_variables = "warn"
+dead_code = "warn"
+
+[workspace.lints.clippy]
+all = "deny"
+pedantic = "deny"
+nursery = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "deny"
+file_names_in_comments = "warn"
+missing_inline_in_public_items = "warn"
+module_name_repetitions = "warn"
+single_use_lifetimes = "warn"
+style = "deny"
+perf = "deny"
+correctness = "deny"

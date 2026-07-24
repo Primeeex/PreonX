@@ -1,0 +1,45 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+
+# Executables
+*.exe
+preonx_sandbox
+sandbox_tests
+
+# Generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Logs
+logs/*.log
+
+# Screenshots and captures
+screenshots/*.png
+captures/*.data
+captures/*.json
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,33 @@
+# rustfmt configuration
+# See: https://rust-lang.github.io/rustfmt/
+
+edition = "2021"
+max_width = 120
+tab_spaces = 4
+use_field_init_shorthand = true
+use_try_shorthand = true
+use_small_heuristics = "Default"
+
+# Imports
+imports_granularity = "Crate"
+group_imports = "StdExternalCrate"
+reorder_imports = true
+reorder_modules = true
+
+# Control flow
+single_line_if_else_max_width = 80
+single_line_let_else_max_width = 80
+
+# Formatting
+chain_width = 80
+blocks_in_trailing_expr = 80
+condense_wildcard_suffixes = false
+
+# Comments
+wrap_comments = false
+comment_width = 100
+normalize_comments = false
+
+# Macros
+format_code_in_doc_comments = false
+format_macro_matchers = false

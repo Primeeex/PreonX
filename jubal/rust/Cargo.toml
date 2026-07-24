@@ -1,0 +1,15 @@
+[package]
+name = "preonx-jubal"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Audio system components for the PreonX engine (Rust)"
+
+[dependencies]
+# Dependencies will be added as the audio system is implemented.
+
+[lints]
+workspace = true

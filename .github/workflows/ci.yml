@@ -1,0 +1,192 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CMAKE_BUILD_TYPE: Debug
+
+jobs:
+  # ── C++ Build ────────────────────────────────────────────────────────────────
+  cpp-build:
+    name: C++ Build (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [clang, gcc]
+        include:
+          - compiler: clang
+            cc: clang-17
+            cxx: clang++-17
+          - compiler: gcc
+            cc: gcc-14
+            cxx: g++-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Compiler
+        run: |
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt-get update
+            sudo apt-get install -y clang-17
+          elif [ "${{ matrix.compiler }}" = "gcc" ]; then
+            sudo apt-get update
+            sudo apt-get install -y gcc-14 g++-14
+          fi
+
+      - name: Install CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Configure
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
+          -DCMAKE_C_COMPILER=${{ matrix.cc }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+          -DPREONX_WARNINGS_AS_ERRORS=ON
+          -DPREONX_BUILD_TESTS=ON
+          -DPREONX_BUILD_EXAMPLES=ON
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build
+        run: cmake --build build --parallel -- -k
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  # ── Rust Workspace ───────────────────────────────────────────────────────────
+  rust-check:
+    name: Rust Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock', '**/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Check Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Build
+        run: cargo build --all --verbose
+
+  # ── Python Checks ────────────────────────────────────────────────────────────
+  python-check:
+    name: Python Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: uv sync
+
+      - name: Ruff Format Check
+        run: uv run ruff format --check .
+
+      - name: Ruff Lint Check
+        run: uv run ruff check .
+
+      - name: Mypy Type Check
+        run: uv run mypy --config-file mypy.ini || true
+
+  # ── Formatting Checks ────────────────────────────────────────────────────────
+  formatting:
+    name: Code Formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format-17 || sudo apt-get install -y clang-format
+
+      - name: Check C++ Formatting
+        run: |
+          find foundation primeon luminium cambyses cochise jubal integration sdk examples \
+            -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | \
+            xargs clang-format --dry-run --Werror
+
+      - name: Install Rust tools
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Check Rust Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check Python Formatting
+        run: |
+          uv sync
+          uv run ruff format --check .
+
+  # ── Markdown Lint ────────────────────────────────────────────────────────────
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Lint Markdown
+        run: |
+          markdownlint '**/*.md' --ignore node_modules --ignore docs/_build

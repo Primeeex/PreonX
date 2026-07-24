@@ -1,0 +1,9 @@
+# clippy configuration
+# See: https://doc.rust-lang.org/clippy/configuration.html
+
+# Warn on common mistakes
+avoid-breaking-exported-api = true
+enum-variant-name-threshold = 3
+too-many-arguments-threshold = 12
+type-complexity-threshold = 250
+trivial-copy-size-limit = 8
